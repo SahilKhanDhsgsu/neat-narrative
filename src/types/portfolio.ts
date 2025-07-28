@@ -31,6 +31,13 @@ export interface PortfolioData {
     techStack: string;
     link: string;
   }[];
-  certifications?: never;
+  certificates: {
+    title: string;
+    issuer: string;
+    issueDate: string;
+    expiryDate: string;
+    credentialId: string;
+    description: string;
+  }[];
   skills: string[];
 }
