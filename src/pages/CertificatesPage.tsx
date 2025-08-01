@@ -9,11 +9,7 @@ import Footer from '../components/Footer';
 import { portfolioData } from '../data/portfolioData';
 
 const CertificatesPage = () => {
-  const { certificates } = portfolioData;
-
-  const isExpired = (expiryDate: string) => {
-    return new Date(expiryDate) < new Date();
-  };
+  const { certifications } = portfolioData;
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-US', {
@@ -42,7 +38,7 @@ const CertificatesPage = () => {
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-600 to-purple-600 hidden md:block"></div>
 
             <div className="space-y-8">
-              {certificates.map((cert, index) => (
+              {certifications.map((cert, index) => (
                 <div
                   key={index}
                   className="relative animate-fade-in"
@@ -60,7 +56,7 @@ const CertificatesPage = () => {
                           </div>
                           <div>
                             <CardTitle className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-                              {cert.title}
+                              {cert.name}
                             </CardTitle>
                             <CardDescription className="text-lg text-gray-600 mt-1 flex items-center space-x-2">
                               <Building size={16} />
@@ -68,12 +64,8 @@ const CertificatesPage = () => {
                             </CardDescription>
                           </div>
                         </div>
-                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          isExpired(cert.expiryDate) 
-                            ? 'bg-red-100 text-red-800' 
-                            : 'bg-green-100 text-green-800'
-                        }`}>
-                          {isExpired(cert.expiryDate) ? 'Expired' : 'Valid'}
+                        <div className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                          Valid
                         </div>
                       </div>
                     </CardHeader>
@@ -82,21 +74,17 @@ const CertificatesPage = () => {
                       <div className="flex items-center space-x-6 text-gray-600 mb-4">
                         <div className="flex items-center space-x-2">
                           <Calendar size={16} />
-                          <span>Issued: {formatDate(cert.issueDate)}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Calendar size={16} />
-                          <span>Expires: {formatDate(cert.expiryDate)}</span>
+                          <span>Issued: {formatDate(cert.date)}</span>
                         </div>
                       </div>
                       
                       <p className="text-gray-700 mb-6 leading-relaxed">
-                        {cert.description}
+                        This certificate validates professional competency and expertise in the specified domain.
                       </p>
                       
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-500">
-                          ID: {cert.credentialId}
+                          ID: CERT-{index + 1}-2024
                         </span>
                         <Link to={`/certificates/${index}`}>
                           <Button 

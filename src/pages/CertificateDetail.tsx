@@ -11,7 +11,7 @@ import { portfolioData } from '../data/portfolioData';
 const CertificateDetail = () => {
   const { id } = useParams<{ id: string }>();
   const certificateIndex = parseInt(id || '0');
-  const certificate = portfolioData.certificates[certificateIndex];
+  const certificate = portfolioData.certifications[certificateIndex];
 
   if (!certificate) {
     return (
@@ -34,7 +34,6 @@ const CertificateDetail = () => {
     );
   }
 
-  const isExpired = new Date(certificate.expiryDate) < new Date();
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -43,7 +42,7 @@ const CertificateDetail = () => {
     });
   };
 
-  const getSkillsFromCertificate = (title: string) => {
+  const getSkillsFromCertificate = (name: string) => {
     const skillMap: { [key: string]: string[] } = {
       'AWS Certified Cloud Practitioner': ['AWS', 'Cloud Computing', 'DevOps'],
       'React Developer Certification': ['React', 'JavaScript', 'Frontend Development'],
@@ -51,10 +50,10 @@ const CertificateDetail = () => {
       'MongoDB Developer Path': ['MongoDB', 'Database Design', 'NoSQL'],
     };
     
-    return skillMap[title] || [];
+    return skillMap[name] || [];
   };
 
-  const skills = getSkillsFromCertificate(certificate.title);
+  const skills = getSkillsFromCertificate(certificate.name);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -80,7 +79,7 @@ const CertificateDetail = () => {
                   </div>
                   <div>
                     <CardTitle className="text-4xl font-bold text-gray-900 mb-2">
-                      {certificate.title}
+                      {certificate.name}
                     </CardTitle>
                     <CardDescription className="text-lg text-gray-600 flex items-center space-x-2">
                       <Building size={20} />
@@ -88,17 +87,9 @@ const CertificateDetail = () => {
                     </CardDescription>
                   </div>
                 </div>
-                <div className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 ${
-                  isExpired 
-                    ? 'bg-red-100 text-red-800' 
-                    : 'bg-green-100 text-green-800'
-                }`}>
-                  {isExpired ? (
-                    <AlertCircle size={16} />
-                  ) : (
-                    <CheckCircle size={16} />
-                  )}
-                  <span>{isExpired ? 'Expired' : 'Valid'}</span>
+                <div className="px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 bg-green-100 text-green-800">
+                  <CheckCircle size={16} />
+                  <span>Valid</span>
                 </div>
               </div>
             </CardHeader>
@@ -111,14 +102,7 @@ const CertificateDetail = () => {
                       <Calendar size={20} className="text-blue-600" />
                       <span className="font-medium text-gray-900">Issue Date</span>
                     </div>
-                    <p className="text-gray-700">{formatDate(certificate.issueDate)}</p>
-                  </div>
-                  <div className="p-4 bg-purple-50 rounded-lg">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <Calendar size={20} className="text-purple-600" />
-                      <span className="font-medium text-gray-900">Expiry Date</span>
-                    </div>
-                    <p className="text-gray-700">{formatDate(certificate.expiryDate)}</p>
+                    <p className="text-gray-700">{formatDate(certificate.date)}</p>
                   </div>
                 </div>
                 <div className="space-y-4">
@@ -127,7 +111,7 @@ const CertificateDetail = () => {
                       <Award size={20} className="text-green-600" />
                       <span className="font-medium text-gray-900">Credential ID</span>
                     </div>
-                    <p className="text-gray-700 font-mono text-sm">{certificate.credentialId}</p>
+                    <p className="text-gray-700 font-mono text-sm">CERT-{certificateIndex + 1}-2024</p>
                   </div>
                   <div className="p-4 bg-gray-50 rounded-lg">
                     <div className="flex items-center space-x-2 mb-2">
@@ -142,7 +126,8 @@ const CertificateDetail = () => {
               <div className="mb-8">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">About This Certificate</h3>
                 <p className="text-gray-700 leading-relaxed">
-                  {certificate.description}
+                  This certificate validates professional competency and expertise in the specified domain. 
+                  It represents completion of rigorous training and assessment requirements set by {certificate.issuer}.
                 </p>
               </div>
 

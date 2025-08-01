@@ -56,7 +56,7 @@ const ProjectDetail = () => {
               </div>
 
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                {project.title}
+                {project.name}
               </h1>
 
               <p className="text-lg text-gray-700 leading-relaxed mb-8">
@@ -98,7 +98,7 @@ const ProjectDetail = () => {
               <div className="bg-gray-50 rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">Technology Stack</h3>
                 <div className="flex flex-wrap gap-2">
-                  {project.techStack.split(', ').map((tech) => (
+                  {project.tech.split(', ').map((tech) => (
                     <span key={tech} className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
                       {tech}
                     </span>

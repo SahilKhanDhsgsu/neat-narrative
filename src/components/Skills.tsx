@@ -1,117 +1,155 @@
 
-import React, { useState } from 'react';
-import { Code, Palette, Database, Cloud, Star } from 'lucide-react';
-import { portfolioData } from '../data/portfolioData';
+import React from 'react';
+import { Code, Database, Palette, Settings } from 'lucide-react';
+import EditableText from './EditableText';
+import { PortfolioData } from '../types/portfolio';
 
-const Skills = () => {
-  const { skills } = portfolioData;
-  const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+interface SkillsProps {
+  skills: PortfolioData['skills'];
+  isEditMode: boolean;
+  onUpdate: (skills: PortfolioData['skills']) => void;
+}
 
-  const skillCategories = {
-    'Frontend': ['JavaScript', 'TypeScript', 'React', 'Next.js', 'Vue.js', 'HTML5', 'CSS3', 'Tailwind CSS', 'SASS'],
-    'Backend': ['Node.js', 'Express.js', 'Python', 'GraphQL', 'REST APIs'],
-    'Database': ['MongoDB', 'PostgreSQL', 'Redis'],
-    'Design': ['Figma', 'Adobe XD'],
-    'Tools & Cloud': ['Git', 'Docker', 'AWS', 'Firebase', 'Jest', 'Cypress']
+const Skills: React.FC<SkillsProps> = ({
+  skills,
+  isEditMode,
+  onUpdate
+}) => {
+  const handleSkillsUpdate = (newSkillsText: string) => {
+    const skillsArray = newSkillsText.split(',').map(skill => skill.trim()).filter(skill => skill.length > 0);
+    onUpdate(skillsArray);
   };
 
-  const categoryIcons = {
-    'Frontend': Code,
-    'Backend': Database,
-    'Database': Database,
-    'Design': Palette,
-    'Tools & Cloud': Cloud
+  const addSkill = (skillName: string) => {
+    if (!skills.includes(skillName)) {
+      onUpdate([...skills, skillName]);
+    }
   };
 
-  const getRandomDelay = () => Math.random() * 500;
-  const getRandomScale = () => 0.95 + Math.random() * 0.1;
+  const removeSkill = (index: number) => {
+    const updated = skills.filter((_, i) => i !== index);
+    onUpdate(updated);
+  };
+
+  const skillCategories = [
+    {
+      title: "Frontend",
+      icon: <Code className="w-6 h-6" />,
+      skills: skills.filter(skill => 
+        ['JavaScript', 'TypeScript', 'React', 'Next.js', 'Vue.js', 'HTML5', 'CSS3', 'Tailwind CSS', 'SASS'].includes(skill)
+      )
+    },
+    {
+      title: "Backend",
+      icon: <Database className="w-6 h-6" />,
+      skills: skills.filter(skill => 
+        ['Node.js', 'Express.js', 'Python', 'MongoDB', 'PostgreSQL', 'GraphQL', 'REST APIs'].includes(skill)
+      )
+    },
+    {
+      title: "Design",
+      icon: <Palette className="w-6 h-6" />,
+      skills: skills.filter(skill => 
+        ['Figma', 'Adobe XD'].includes(skill)
+      )
+    },
+    {
+      title: "Tools & DevOps",
+      icon: <Settings className="w-6 h-6" />,
+      skills: skills.filter(skill => 
+        ['Git', 'Docker', 'AWS', 'Firebase', 'Jest', 'Cypress'].includes(skill)
+      )
+    }
+  ];
 
   return (
     <section id="skills" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Skills & Expertise
+            Skills & Technologies
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Technologies and tools I use to bring ideas to life
+            A comprehensive overview of my technical expertise and the tools I use to build amazing products
           </p>
         </div>
 
-        <div className="space-y-12">
-          {Object.entries(skillCategories).map(([category, categorySkills], categoryIndex) => {
-            const IconComponent = categoryIcons[category as keyof typeof categoryIcons];
-            
-            return (
+        {isEditMode ? (
+          <div className="mb-12">
+            <EditableText
+              value={skills.join(', ')}
+              onChange={handleSkillsUpdate}
+              isEditing={isEditMode}
+              className="text-lg text-gray-700 p-4 border rounded-lg bg-white"
+              placeholder="Enter skills separated by commas..."
+              multiline
+              as="textarea"
+            />
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {skillCategories.map((category, categoryIndex) => (
               <div
-                key={category}
-                className="animate-fade-in"
+                key={categoryIndex}
+                className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-in group hover:scale-105"
                 style={{ animationDelay: `${categoryIndex * 200}ms` }}
               >
-                <div className="flex items-center space-x-3 mb-8">
-                  <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl">
-                    <IconComponent size={24} className="text-white" />
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="p-3 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors duration-300 text-blue-600">
+                    {category.icon}
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900">{category}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                    {category.title}
+                  </h3>
                 </div>
 
-                <div className="flex flex-wrap gap-4">
-                  {categorySkills.filter(skill => skills.includes(skill)).map((skill, skillIndex) => (
+                <div className="space-y-3">
+                  {category.skills.map((skill, skillIndex) => (
                     <div
-                      key={skill}
-                      className="group relative animate-scale-in hover-scale"
-                      style={{ 
-                        animationDelay: `${categoryIndex * 200 + skillIndex * 100}ms`,
-                        transform: `scale(${getRandomScale()})`
-                      }}
-                      onMouseEnter={() => setHoveredSkill(skill)}
-                      onMouseLeave={() => setHoveredSkill(null)}
+                      key={skillIndex}
+                      className="relative group/skill"
                     >
-                      <div className="px-6 py-3 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 group-hover:border-blue-300 cursor-default">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-gray-800 font-medium">{skill}</span>
-                          <Star 
-                            size={16} 
-                            className={`transition-all duration-300 ${
-                              hoveredSkill === skill 
-                                ? 'text-yellow-500 fill-current' 
-                                : 'text-gray-300'
-                            }`}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Hover tooltip */}
-                      {hoveredSkill === skill && (
-                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
-                          {skill}
-                          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-900"></div>
-                        </div>
+                      {isEditMode && (
+                        <button
+                          onClick={() => removeSkill(skills.indexOf(skill))}
+                          className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-xs hover:bg-red-600 transition-colors duration-200"
+                        >
+                          ×
+                        </button>
                       )}
-
-                      {/* Floating particles effect */}
-                      <div className="absolute inset-0 pointer-events-none">
-                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-bounce transition-opacity duration-300"></div>
-                        <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-purple-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-bounce transition-opacity duration-300" style={{ animationDelay: '200ms' }}></div>
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg group-hover/skill:bg-blue-50 transition-colors duration-300">
+                        <span className="font-medium text-gray-700 group-hover/skill:text-blue-700 transition-colors duration-300">
+                          {skill}
+                        </span>
+                        <div className="w-2 h-2 bg-green-500 rounded-full group-hover/skill:bg-blue-500 transition-colors duration-300"></div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-            );
-          })}
-        </div>
-
-        {/* Additional skills not in categories */}
-        <div className="mt-16 text-center">
-          <p className="text-gray-600 mb-8">Always learning and exploring new technologies</p>
-          <div className="flex justify-center">
-            <div className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <span className="mr-2">🚀</span>
-              Open to new challenges
-            </div>
+            ))}
           </div>
-        </div>
+        )}
+
+        {isEditMode && (
+          <div className="mt-8 flex flex-wrap gap-2 justify-center">
+            {['React', 'Vue.js', 'Angular', 'Svelte', 'Python', 'Java', 'C++'].map((skill) => (
+              <button
+                key={skill}
+                onClick={() => addSkill(skill)}
+                className={`px-3 py-1 rounded-full text-sm transition-colors duration-300 ${
+                  skills.includes(skill)
+                    ? 'bg-blue-100 text-blue-700 cursor-not-allowed'
+                    : 'bg-gray-100 text-gray-700 hover:bg-blue-100 hover:text-blue-700'
+                }`}
+                disabled={skills.includes(skill)}
+              >
+                {skills.includes(skill) ? '✓ ' : '+ '}
+                {skill}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
