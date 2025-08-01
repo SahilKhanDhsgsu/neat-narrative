@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Code, Database, Palette, Settings } from 'lucide-react';
 import EditableText from './EditableText';
@@ -83,7 +82,6 @@ const Skills: React.FC<SkillsProps> = ({
               className="text-lg text-gray-700 p-4 border rounded-lg bg-white"
               placeholder="Enter skills separated by commas..."
               multiline
-              as="textarea"
             />
           </div>
         ) : (
