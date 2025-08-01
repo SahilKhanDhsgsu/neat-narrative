@@ -1,15 +1,25 @@
 
 import React from 'react';
 import { Mail, Phone, MapPin, Github, Linkedin, Twitter, ExternalLink } from 'lucide-react';
-import { portfolioData } from '../data/portfolioData';
+import EditableText from './EditableText';
+import PhotoUpload from './PhotoUpload';
+import { PortfolioData } from '../types/portfolio';
 
-const Hero = () => {
-  const { personalInfo } = portfolioData;
+interface HeroProps {
+  personalInfo: PortfolioData['personalInfo'];
+  isEditMode: boolean;
+  onUpdate: (personalInfo: PortfolioData['personalInfo']) => void;
+}
+
+const Hero: React.FC<HeroProps> = ({ personalInfo, isEditMode, onUpdate }) => {
+  const handleFieldUpdate = (field: keyof PortfolioData['personalInfo'], value: string) => {
+    onUpdate({ ...personalInfo, [field]: value });
+  };
 
   const socialLinks = [
-    { icon: Github, url: personalInfo.github, label: 'GitHub' },
-    { icon: Linkedin, url: personalInfo.linkedin, label: 'LinkedIn' },
-    { icon: Twitter, url: personalInfo.twitter, label: 'Twitter' },
+    { icon: Github, url: personalInfo.github, label: 'GitHub', field: 'github' as const },
+    { icon: Linkedin, url: personalInfo.linkedin, label: 'LinkedIn', field: 'linkedin' as const },
+    { icon: Twitter, url: personalInfo.twitter, label: 'Twitter', field: 'twitter' as const },
   ];
 
   return (
@@ -22,52 +32,119 @@ const Hero = () => {
               <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
                 Hi, I'm{' '}
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {personalInfo.name.split(' ')[0]}
+                  <EditableText
+                    value={personalInfo.name.split(' ')[0]}
+                    onChange={(value) => {
+                      const lastName = personalInfo.name.split(' ').slice(1).join(' ');
+                      handleFieldUpdate('name', `${value} ${lastName}`);
+                    }}
+                    isEditing={isEditMode}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                    placeholder="First Name"
+                    as="span"
+                  />
                 </span>
               </h1>
-              <h2 className="text-2xl lg:text-3xl text-gray-600 font-light">
-                {personalInfo.title}
-              </h2>
-              <p className="text-lg text-gray-700 leading-relaxed max-w-2xl">
-                {personalInfo.summary}
-              </p>
+              
+              <EditableText
+                value={personalInfo.title}
+                onChange={(value) => handleFieldUpdate('title', value)}
+                isEditing={isEditMode}
+                className="text-2xl lg:text-3xl text-gray-600 font-light"
+                placeholder="Your professional title"
+                as="h2"
+              />
+              
+              <EditableText
+                value={personalInfo.summary}
+                onChange={(value) => handleFieldUpdate('summary', value)}
+                isEditing={isEditMode}
+                className="text-lg text-gray-700 leading-relaxed max-w-2xl"
+                placeholder="Brief summary about yourself"
+                multiline
+                as="p"
+              />
             </div>
 
             {/* Contact Info */}
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 transition-colors duration-300">
                 <Mail size={20} />
-                <a href={`mailto:${personalInfo.email}`} className="hover:underline">
-                  {personalInfo.email}
-                </a>
+                {isEditMode ? (
+                  <EditableText
+                    value={personalInfo.email}
+                    onChange={(value) => handleFieldUpdate('email', value)}
+                    isEditing={isEditMode}
+                    className="hover:underline"
+                    placeholder="email@example.com"
+                    as="span"
+                  />
+                ) : (
+                  <a href={`mailto:${personalInfo.email}`} className="hover:underline">
+                    {personalInfo.email}
+                  </a>
+                )}
               </div>
+              
               <div className="flex items-center space-x-3 text-gray-600">
                 <Phone size={20} />
-                <span>{personalInfo.phone}</span>
+                <EditableText
+                  value={personalInfo.phone}
+                  onChange={(value) => handleFieldUpdate('phone', value)}
+                  isEditing={isEditMode}
+                  placeholder="+1 (555) 123-4567"
+                  as="span"
+                />
               </div>
+              
               <div className="flex items-center space-x-3 text-gray-600">
                 <MapPin size={20} />
-                <span>{personalInfo.location}</span>
+                <EditableText
+                  value={personalInfo.location}
+                  onChange={(value) => handleFieldUpdate('location', value)}
+                  isEditing={isEditMode}
+                  placeholder="City, State"
+                  as="span"
+                />
               </div>
             </div>
 
             {/* Social Links */}
             <div className="flex space-x-4">
-              {socialLinks.map(({ icon: Icon, url, label }) => (
-                url && (
-                  <a
-                    key={label}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110"
-                  >
-                    <Icon 
-                      size={20} 
-                      className="text-gray-600 group-hover:text-blue-600 transition-colors duration-300" 
-                    />
-                  </a>
-                )
+              {socialLinks.map(({ icon: Icon, url, label, field }) => (
+                <div key={label} className="relative group">
+                  {isEditMode ? (
+                    <div className="w-12 h-12 bg-white rounded-full shadow-md flex items-center justify-center">
+                      <Icon size={20} className="text-gray-600" />
+                    </div>
+                  ) : (
+                    url && (
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110"
+                      >
+                        <Icon 
+                          size={20} 
+                          className="text-gray-600 group-hover:text-blue-600 transition-colors duration-300" 
+                        />
+                      </a>
+                    )
+                  )}
+                  {isEditMode && (
+                    <div className="absolute top-full mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <EditableText
+                        value={url || ''}
+                        onChange={(value) => handleFieldUpdate(field, value)}
+                        isEditing={isEditMode}
+                        className="text-xs w-32"
+                        placeholder={`${label} URL`}
+                        as="span"
+                      />
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
 
@@ -91,20 +168,12 @@ const Hero = () => {
 
           {/* Profile Image */}
           <div className="flex justify-center lg:justify-end animate-fade-in">
-            <div className="relative">
-              <div className="w-80 h-80 rounded-full bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 p-1 shadow-2xl">
-                <div className="w-full h-full rounded-full overflow-hidden bg-white">
-                  <img
-                    src={personalInfo.photo}
-                    alt={personalInfo.name}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
-                  />
-                </div>
-              </div>
-              {/* Floating decoration */}
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-yellow-400 rounded-full animate-bounce"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '1s' }}></div>
-            </div>
+            <PhotoUpload
+              photo={personalInfo.photo}
+              name={personalInfo.name}
+              isEditing={isEditMode}
+              onPhotoChange={(photoUrl) => handleFieldUpdate('photo', photoUrl)}
+            />
           </div>
         </div>
       </div>
