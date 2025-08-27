@@ -26,15 +26,18 @@ export interface PortfolioData {
     endDate: string;
   }[];
   projects: {
-    name: string;
-    tech: string;
-    link?: string;
+    title: string;
     description: string;
+    techStack: string;
+    link: string;
   }[];
-  certifications: {
-    name: string;
+  certificates: {
+    title: string;
     issuer: string;
-    date: string;
+    issueDate: string;
+    expiryDate: string;
+    credentialId: string;
+    description: string;
   }[];
   skills: string[];
 }

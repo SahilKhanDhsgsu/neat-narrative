@@ -53,27 +53,27 @@ export const portfolioData: PortfolioData = {
   ],
   projects: [
     {
-      name: "EcoTrack - Sustainability Dashboard",
+      title: "EcoTrack - Sustainability Dashboard",
       description: "A comprehensive web application that helps users track their carbon footprint and discover eco-friendly alternatives. Features real-time data visualization and personalized recommendations.",
-      tech: "React, Node.js, MongoDB, Chart.js, Tailwind CSS",
+      techStack: "React, Node.js, MongoDB, Chart.js, Tailwind CSS",
       link: "https://github.com/alexjohnson/ecotrack"
     },
     {
-      name: "TaskFlow - Project Management Tool",
+      title: "TaskFlow - Project Management Tool",
       description: "A modern project management application with real-time collaboration features. Includes drag-and-drop task boards, team chat, and progress analytics.",
-      tech: "Next.js, TypeScript, Prisma, PostgreSQL, Socket.io",
+      techStack: "Next.js, TypeScript, Prisma, PostgreSQL, Socket.io",
       link: "https://github.com/alexjohnson/taskflow"
     },
     {
-      name: "FoodieBot - Recipe Recommendation AI",
+      title: "FoodieBot - Recipe Recommendation AI",
       description: "An intelligent recipe recommendation system that suggests meals based on dietary preferences, available ingredients, and nutritional goals using machine learning algorithms.",
-      tech: "Python, Flask, TensorFlow, React, PostgreSQL",
+      techStack: "Python, Flask, TensorFlow, React, PostgreSQL",
       link: "https://github.com/alexjohnson/foodiebot"
     },
     {
-      name: "CryptoWatch - Cryptocurrency Tracker",
+      title: "CryptoWatch - Cryptocurrency Tracker",
       description: "A responsive web application for tracking cryptocurrency prices with real-time updates, portfolio management, and technical analysis tools.",
-      tech: "Vue.js, Express.js, Redis, WebSocket API, D3.js",
+      techStack: "Vue.js, Express.js, Redis, WebSocket API, D3.js",
       link: "https://github.com/alexjohnson/cryptowatch"
     }
   ],
@@ -83,26 +83,38 @@ export const portfolioData: PortfolioData = {
     "HTML5", "CSS3", "Tailwind CSS", "SASS", "Figma", "Adobe XD", 
     "Git", "Docker", "AWS", "Firebase", "Jest", "Cypress"
   ],
-  certifications: [
+  certificates: [
     {
-      name: "AWS Certified Cloud Practitioner",
+      title: "AWS Certified Cloud Practitioner",
       issuer: "Amazon Web Services",
-      date: "Mar 2024"
+      issueDate: "Mar 2024",
+      expiryDate: "Mar 2027",
+      credentialId: "AWS-CCP-2024-001",
+      description: "Demonstrates foundational knowledge of AWS Cloud, including core services, security, compliance, and billing."
     },
     {
-      name: "React Developer Certification",
+      title: "React Developer Certification",
       issuer: "Meta",
-      date: "Jan 2024"
+      issueDate: "Jan 2024",
+      expiryDate: "Jan 2026",
+      credentialId: "META-REACT-2024-001",
+      description: "Comprehensive certification covering React fundamentals, hooks, state management, and modern React development practices."
     },
     {
-      name: "Google UX Design Certificate",
+      title: "Google UX Design Certificate",
       issuer: "Google",
-      date: "Nov 2023"
+      issueDate: "Nov 2023",
+      expiryDate: "Nov 2025",
+      credentialId: "GOOGLE-UX-2023-001",
+      description: "Professional certificate program covering user experience design principles, prototyping, and user research methodologies."
     },
     {
-      name: "MongoDB Developer Path",
+      title: "MongoDB Developer Path",
       issuer: "MongoDB University",
-      date: "Sep 2023"
+      issueDate: "Sep 2023",
+      expiryDate: "Sep 2025",
+      credentialId: "MONGO-DEV-2023-001",
+      description: "Comprehensive training on MongoDB database development, including data modeling, querying, and performance optimization."
     }
   ]
 };

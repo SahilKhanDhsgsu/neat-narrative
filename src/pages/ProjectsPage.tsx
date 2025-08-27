@@ -58,7 +58,7 @@ const ProjectsPage = () => {
                         </div>
                         
                         <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                          {project.name}
+                          {project.title}
                         </h3>
                         
                         <p className="text-gray-700 leading-relaxed mb-4 line-clamp-3">
@@ -68,7 +68,7 @@ const ProjectsPage = () => {
                         {/* Tech Stack Preview */}
                         <div className="mb-6">
                           <div className="flex flex-wrap gap-2">
-                            {project.tech.split(', ').slice(0, 3).map((tech, techIndex) => (
+                            {project.techStack.split(', ').slice(0, 3).map((tech, techIndex) => (
                               <span
                                 key={techIndex}
                                 className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium"
@@ -76,9 +76,9 @@ const ProjectsPage = () => {
                                 {tech}
                               </span>
                             ))}
-                            {project.tech.split(', ').length > 3 && (
+                            {project.techStack.split(', ').length > 3 && (
                               <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
-                                +{project.tech.split(', ').length - 3} more
+                                +{project.techStack.split(', ').length - 3} more
                               </span>
                             )}
                           </div>
